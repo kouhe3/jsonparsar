@@ -1,4 +1,3 @@
-
 use super::*;
 use syn::{LitBool, LitFloat, LitInt, LitStr, parse_str};
 
@@ -179,7 +178,10 @@ fn test_nested_object_array() {
             // 第一个 book 对象
             if let JsonValue::Object(first_book) = &books_arr[0] {
                 // 验证 title 字符串
-                let title_entry = first_book.iter().find(|(k, _)| k.value() == "title").unwrap();
+                let title_entry = first_book
+                    .iter()
+                    .find(|(k, _)| k.value() == "title")
+                    .unwrap();
                 if let JsonValue::String(s) = &title_entry.1 {
                     assert_eq!(s.value(), "The Rust Programming Language");
                 } else {
@@ -187,9 +189,15 @@ fn test_nested_object_array() {
                 }
 
                 // 验证 details 对象中的 categories 数组
-                let details_entry = first_book.iter().find(|(k, _)| k.value() == "details").unwrap();
+                let details_entry = first_book
+                    .iter()
+                    .find(|(k, _)| k.value() == "details")
+                    .unwrap();
                 if let JsonValue::Object(details_obj) = &details_entry.1 {
-                    let categories_entry = details_obj.iter().find(|(k, _)| k.value() == "categories").unwrap();
+                    let categories_entry = details_obj
+                        .iter()
+                        .find(|(k, _)| k.value() == "categories")
+                        .unwrap();
                     if let JsonValue::Array(categories_arr) = &categories_entry.1 {
                         assert_eq!(categories_arr.len(), 2);
                         if let JsonValue::String(s1) = &categories_arr[0] {
@@ -215,13 +223,22 @@ fn test_nested_object_array() {
             // 第二个 book 对象（包含 null 值和空数组）
             if let JsonValue::Object(second_book) = &books_arr[1] {
                 // 验证 author 为 null
-                let author_entry = second_book.iter().find(|(k, _)| k.value() == "author").unwrap();
+                let author_entry = second_book
+                    .iter()
+                    .find(|(k, _)| k.value() == "author")
+                    .unwrap();
                 assert!(matches!(author_entry.1, JsonValue::Null));
 
                 // 验证 details 中的空数组
-                let details_entry = second_book.iter().find(|(k, _)| k.value() == "details").unwrap();
+                let details_entry = second_book
+                    .iter()
+                    .find(|(k, _)| k.value() == "details")
+                    .unwrap();
                 if let JsonValue::Object(details_obj) = &details_entry.1 {
-                    let categories_entry = details_obj.iter().find(|(k, _)| k.value() == "categories").unwrap();
+                    let categories_entry = details_obj
+                        .iter()
+                        .find(|(k, _)| k.value() == "categories")
+                        .unwrap();
                     if let JsonValue::Array(categories_arr) = &categories_entry.1 {
                         assert!(categories_arr.is_empty());
                     } else {
@@ -241,14 +258,20 @@ fn test_nested_object_array() {
         let stats_entry = obj.iter().find(|(k, _)| k.value() == "stats").unwrap();
         if let JsonValue::Object(stats_obj) = &stats_entry.1 {
             // 验证数值和布尔值
-            let total_entry = stats_obj.iter().find(|(k, _)| k.value() == "total_books").unwrap();
+            let total_entry = stats_obj
+                .iter()
+                .find(|(k, _)| k.value() == "total_books")
+                .unwrap();
             if let JsonValue::Number(n) = &total_entry.1 {
                 assert_eq!(n.base10_digits(), "2");
             } else {
                 panic!("Total books is not a number");
             }
 
-            let has_data_entry = stats_obj.iter().find(|(k, _)| k.value() == "has_missing_data").unwrap();
+            let has_data_entry = stats_obj
+                .iter()
+                .find(|(k, _)| k.value() == "has_missing_data")
+                .unwrap();
             if let JsonValue::Bool(b) = &has_data_entry.1 {
                 assert!(b.value());
             } else {
