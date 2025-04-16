@@ -1,0 +1,11 @@
+[package]
+name = "jsonparsar"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+jsonmacro = { path = "jsonmacro" }
+[workspace]
+members = [
+    "jsonmacro",
+]
