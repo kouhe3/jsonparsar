@@ -19,6 +19,39 @@ enum JsonValue {
     Object(Vec<(LitStr, JsonValue)>),
 }
 
+impl JsonValue {
+    fn to_json_str(&self) -> String {
+         match self {
+            JsonValue::Null => "null".to_string(),
+            JsonValue::Bool(b) => b.value().to_string(), // true/false
+            JsonValue::Number(n) => n.base10_digits().to_string(), // 整数转字符串
+            JsonValue::Float(f) => f.base10_digits().to_string(), // 浮点数转字符串
+            JsonValue::String(s) => {
+                format!("\"{}\"", s.value()) // 字符串加双引号
+            }
+            JsonValue::Array(arr) => {
+                let elements = arr.iter()
+                    .map(|e| e.to_json_str())
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                format!("[{}]", elements) // 数组用方括号包裹
+            }
+            JsonValue::Object(obj) => {
+                let entries = obj.iter()
+                    .map(|(k, v)| {
+                        format!(
+                            "\"{}\": {}",
+                            k.value(), // 键加双引号
+                            v.to_json_str() // 值递归转换
+                        )
+                    })
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                format!("{{{}}}", entries) // 对象用花括号包裹
+            }
+        }
+    }
+}
 struct KeyValue {
     k: LitStr,
     v: JsonValue,
